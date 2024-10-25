@@ -14,6 +14,6 @@ def create_annotation(imgdir: str, csv_path: str) -> None:
 
         for file in os.listdir(imgdir):
             if file.endswith(('.png', '.jpg', '.jpeg')):  # Убеждаемся, что это изображение
-                relative_path = os.path.relpath(os.path.join(imgdir, file), start=imgdir)
+                relative_path = os.path.relpath(os.path.join(imgdir, file), start = os.path.dirname(csv_path))
                 absolute_path = os.path.abspath(os.path.join(imgdir, file))
                 writer.writerow([relative_path, absolute_path])
