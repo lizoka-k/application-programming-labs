@@ -1,4 +1,5 @@
 import os
+
 from icrawler.builtin import BingImageCrawler
 
 def download_images(keyword: str, number: int, imgdir: str) -> None:
