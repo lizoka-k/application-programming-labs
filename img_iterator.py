@@ -7,7 +7,7 @@ class ImageIterator:
         Parameter (csv_path): Путь к файлу аннотации.
         """
         self.csv_path = csv_path
-        self.path_list = self.load_csv()
+        self.path_list = self._load_csv()
         self.limit = len(self.path_list)
         self.counter = 0
 
@@ -26,7 +26,7 @@ class ImageIterator:
         else:
             raise StopIteration
 
-    def load_csv(self) -> list:
+    def _load_csv(self) -> list:
         """
         Загружает пути к изображениям из CSV-файла.
         Return: Список абсолютных путей к изображениям.
