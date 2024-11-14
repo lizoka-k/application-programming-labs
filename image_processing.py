@@ -1,5 +1,5 @@
-import numpy as np
 import cv2 as cv
+import numpy as np
 
 
 def read_image(image_path: str) -> np.ndarray:
