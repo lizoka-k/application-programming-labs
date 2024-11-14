@@ -2,8 +2,8 @@ import cv2 as cv
 import matplotlib.pyplot as plt
 
 from arg_parser import get_args
-from image_processing import read_image, convert_to_grayscale, save_image
 from histogram import calculate_histogram, plot_histogram
+from image_processing import read_image, convert_to_grayscale, save_image
 
 
 def main():
