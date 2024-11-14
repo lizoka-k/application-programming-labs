@@ -1,6 +1,6 @@
-import numpy as np
-import matplotlib.pyplot as plt
 import cv2 as cv
+import matplotlib.pyplot as plt
+import numpy as np
 
 
 def calculate_histogram(img: np.ndarray) -> tuple:
