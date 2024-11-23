@@ -2,6 +2,7 @@ import cv2
 import matplotlib.pyplot as plt
 import pandas as pd
 
+
 def read_csv_file(csv_file: str) -> pd.DataFrame:
     """
     Функция читает CSV-файл и создает DataFrame с абсолютными и относительными путями к изображениям.
@@ -11,8 +12,9 @@ def read_csv_file(csv_file: str) -> pd.DataFrame:
         pd.DataFrame: DataFrame с абсолютными и относительными путями.
     """
     df = pd.read_csv(csv_file)
-    df.columns = ['Relative Path', 'Absolute Path']
+    df.columns = ['relative_path', 'absolute_path']
     return df
+
 
 def get_image_dimensions(absolute_path: str) -> (int, int, int):
     """
@@ -31,6 +33,44 @@ def get_image_dimensions(absolute_path: str) -> (int, int, int):
     else:
         return None, None, None
 
+
+def add_image_dimensions(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Функция добавляет колонки с размерами изображений в DataFrame.
+    Parameters:
+        df (pd.DataFrame): DataFrame с абсолютными путями к изображениям.
+    Returns:
+        pd.DataFrame: Обновленный DataFrame с размерами изображений.
+    """
+    heights = []
+    widths = []
+    channels = []
+
+    for absolute_path in df['absolute_path']:
+        height, width, channel = get_image_dimensions(absolute_path)
+        heights.append(height)
+        widths.append(width)
+        channels.append(channel)
+
+    df['height'] = heights
+    df['width'] = widths
+    df['channels'] = channels
+
+    return df
+
+
+def add_area_column(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Функция добавляет колонку с площадью изображений в DataFrame.
+    Parameters:
+        df (pd.DataFrame): DataFrame с размерами изображений.
+    Returns:
+        pd.DataFrame: Обновленный DataFrame с площадью изображений.
+    """
+    df['area'] = df['height'] * df['width']
+    return df
+
+
 def sort_dataframe_by_area(df: pd.DataFrame) -> pd.DataFrame:
     """
     Функция сортирует DataFrame по площади изображений.
@@ -39,7 +79,8 @@ def sort_dataframe_by_area(df: pd.DataFrame) -> pd.DataFrame:
     Returns:
         pd.DataFrame: Отсортированный DataFrame.
     """
-    return df.sort_values(by='Area')
+    return df.sort_values(by='area')
+
 
 def create_dataframe(csv_file: str) -> pd.DataFrame:
     """
@@ -51,24 +92,14 @@ def create_dataframe(csv_file: str) -> pd.DataFrame:
     """
     df = read_csv_file(csv_file)
 
-    heights = []
-    widths = []
-    channels = []
+    df = add_image_dimensions(df)
 
-    for absolute_path in df['Absolute Path']:
-        height, width, channel = get_image_dimensions(absolute_path)
-        heights.append(height)
-        widths.append(width)
-        channels.append(channel)
-
-    df['Height'] = heights
-    df['Width'] = widths
-    df['Channels'] = channels
-    df['Area'] = df['Height'] * df['Width']
+    df = add_area_column(df)
 
     df = sort_dataframe_by_area(df)
 
     return df
+
 
 def filter_dataframe(df: pd.DataFrame, max_width: int, max_height: int) -> pd.DataFrame:
     """
@@ -80,8 +111,9 @@ def filter_dataframe(df: pd.DataFrame, max_width: int, max_height: int) -> pd.Da
     Returns:
         pd.DataFrame: Отфильтрованный DataFrame.
     """
-    filtered_df = df[(df['Height'] <= max_height) & (df['Width'] <= max_width)]
+    filtered_df = df[(df['height'] <= max_height) & (df['width'] <= max_width)]
     return filtered_df
+
 
 def plot_area_distribution(df: pd.DataFrame) -> None:
     """
@@ -90,7 +122,7 @@ def plot_area_distribution(df: pd.DataFrame) -> None:
         df (pd.DataFrame): DataFrame с информацией о площадях изображений.
     """
     plt.figure(figsize=(10, 6))
-    plt.hist(df['Area'].dropna(), bins=30, color='blue', alpha=0.7)
+    plt.hist(df['area'].dropna(), bins=30, color='blue', alpha=0.7)
     plt.title('Распределение площадей изображений')
     plt.xlabel('Площадь изображения (пиксели)')
     plt.ylabel('Частота')
@@ -104,4 +136,4 @@ def display_statistics(df: pd.DataFrame) -> None:
         df (pd.DataFrame): DataFrame с размерами изображений.
     """
     print("Статистическая информация:")
-    print(df[['Height', 'Width', 'Channels']].describe())
+    print(df[['height', 'width', 'channels']].describe())
