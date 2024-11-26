@@ -13,13 +13,17 @@ def main():
 
     try:
         df = mk_DataFrame.create_dataframe(args.csv)
+        print(df)
 
         mk_DataFrame.display_statistics(df)
+
+        print(df)
 
         max_width = int(input("Введите максимальную ширину: "))
         max_height = int(input("Введите максимальную высоту: "))
 
         filtered_df = mk_DataFrame.filter_dataframe(df, max_width, max_height)
+        print(filtered_df)
 
         mk_DataFrame.plot_area_distribution(filtered_df)
 
