@@ -34,13 +34,11 @@ def get_image_dimensions(absolute_path: str) -> (int, int, int):
         return None, None, None
 
 
-def add_image_dimensions(df: pd.DataFrame) -> pd.DataFrame:
+def add_image_dimensions(df: pd.DataFrame) -> None:
     """
     Функция добавляет колонки с размерами изображений в DataFrame.
     Parameters:
         df (pd.DataFrame): DataFrame с абсолютными путями к изображениям.
-    Returns:
-        pd.DataFrame: Обновленный DataFrame с размерами изображений.
     """
     heights = []
     widths = []
@@ -56,19 +54,14 @@ def add_image_dimensions(df: pd.DataFrame) -> pd.DataFrame:
     df['width'] = widths
     df['channels'] = channels
 
-    return df
 
-
-def add_area_column(df: pd.DataFrame) -> pd.DataFrame:
+def add_area_column(df: pd.DataFrame) -> None:
     """
     Функция добавляет колонку с площадью изображений в DataFrame.
     Parameters:
         df (pd.DataFrame): DataFrame с размерами изображений.
-    Returns:
-        pd.DataFrame: Обновленный DataFrame с площадью изображений.
     """
     df['area'] = df['height'] * df['width']
-    return df
 
 
 def sort_dataframe_by_area(df: pd.DataFrame) -> pd.DataFrame:
@@ -92,9 +85,9 @@ def create_dataframe(csv_file: str) -> pd.DataFrame:
     """
     df = read_csv_file(csv_file)
 
-    df = add_image_dimensions(df)
+    add_image_dimensions(df)
 
-    df = add_area_column(df)
+    add_area_column(df)
 
     df = sort_dataframe_by_area(df)
 
@@ -128,6 +121,7 @@ def plot_area_distribution(df: pd.DataFrame) -> None:
     plt.ylabel('Частота')
     plt.grid()
     plt.show()
+
 
 def display_statistics(df: pd.DataFrame) -> None:
     """
